@@ -19,7 +19,9 @@ TemperatureController::TemperatureController()
 	m_bHeating = false;
 	m_ulLastTimeRefresh = 0;
 	m_ulLastTempRefresh = 0;
-	m_bInitialized = false;
+	m_bInitialized = false;	
+	m_bRefreshTemp = false;
+	m_bRefreshTime = false;
 } //TemperatureController
 
 // default destructor
@@ -146,15 +148,21 @@ void TemperatureController::Process()
 			break;
 		case S_IDLE:
 			unsigned long ulCurrentTime = Time::GetInstance().GetUS();
-			if(ulCurrentTime - m_ulLastTimeRefresh > TIME_REFRESH_DELAY)
+			if(ulCurrentTime - m_ulLastTimeRefresh > TIME_REFRESH_DELAY || m_bRefreshTime)
 			{
 				m_eState = S_READ_DATE_TIME; //after initialization the state will back to IDLE after time and temperature read
 				m_ulLastTimeRefresh = m_ulLastTempRefresh = ulCurrentTime;
+				m_bRefreshTime = false;
 			}
 			else if(ulCurrentTime - m_ulLastTempRefresh > TEMP_REFRESH_DELAY)
 			{
 				m_eState = S_READ_TEMP; //after initialization the state will back to IDLE after temperature read
 				m_ulLastTempRefresh = ulCurrentTime;
+			}
+			else if(m_bRefreshTemp)
+			{
+				m_eState = S_READ_MIN_TEMP;
+				m_bRefreshTemp = false;
 			}
 			break;
 	}

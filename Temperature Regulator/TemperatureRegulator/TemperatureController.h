@@ -54,6 +54,8 @@ private:
 	unsigned long m_ulLastTimeRefresh;
 	unsigned long m_ulLastTempRefresh;
 	bool m_bInitialized; //if false, the whole loop will be processed
+	bool m_bRefreshTemp;
+	bool m_bRefreshTime;
 	
 //functions
 public:
@@ -75,8 +77,8 @@ public:
 	unsigned char GetMaxTemp() {return m_ucMaxTemp;}
 	unsigned short GetActualTemp() {return m_usActualTemp;}
 	bool GetHeating() {return m_bHeating;}
-	void RefreshMinMax() {m_eState = S_READ_MIN_TEMP;}
-	void RefreshDateTime() {m_eState = S_READ_DATE_TIME;}
+	void RefreshMinMax() {m_bRefreshTemp = true;}
+	void RefreshDateTime() {m_bRefreshTime = true;}
 	
 	void Process();
 

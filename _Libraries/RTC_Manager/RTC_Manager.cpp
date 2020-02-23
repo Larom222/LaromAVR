@@ -72,7 +72,7 @@ bool RTCManager::WriteDateTime(DateTime _dateTime)
 bool RTCManager::ReadDateTime()
 {
 	if(!m_bConfigured || !m_bMutex || m_eState != S_IDLE)
-	return false;
+		return false;
 		
 	if(TWIManager::GetInstance().Register())
 	{
