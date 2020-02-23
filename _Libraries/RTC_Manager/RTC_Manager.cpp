@@ -381,9 +381,9 @@ void DateTime::TimeToString(char *_strBuf)
 	_strBuf[4] = m_minute % 10 + 48;
 }
 
-void DateTime::DayOfWeekToString(char *_strBuf)
-{
-	switch(m_dayOfWeek)
+void DateTime::DayOfWeekToString(unsigned char _ucDayOfWeek, char *_strBuf)
+{	
+	switch(_ucDayOfWeek)
 	{
 		case 1:
 			_strBuf[0] = 'N';
@@ -418,6 +418,11 @@ void DateTime::DayOfWeekToString(char *_strBuf)
 			_strBuf[1] = '-';
 			break;
 	}
+}
+
+void DateTime::DayOfWeekToString(char *_strBuf)
+{
+	DayOfWeekToString(m_dayOfWeek, _strBuf);
 }
 
 bool DateTime::operator!=(DateTime _dateTime)

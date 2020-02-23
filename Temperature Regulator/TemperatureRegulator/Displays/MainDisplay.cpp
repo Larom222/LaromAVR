@@ -8,7 +8,9 @@
 
 #include "MainDisplay.h"
 #include "../KeyboardManager.h"
+#include "../../../_Libraries/LCD_Display/LCD_Display.h"
 #include "../../../_Libraries/Time/Time.h"
+#include "../TemperatureController.h"
 #include "../Config.h"
 
 // default constructor
@@ -36,33 +38,35 @@ MainDisplay::~MainDisplay()
 void MainDisplay::Process()
 {
 	//Keyboard process
-	KeyboardManager::E_KEY_CODE eKeyToProcess = KeyboardManager::GetInstance().GetKeyToProcess();
-	if(eKeyToProcess != KeyboardManager::K_LAST)
+	if(m_eState != S_SHOW_MENU)
 	{
-		switch(eKeyToProcess)
+		KeyboardManager::E_KEY_CODE eKeyToProcess = KeyboardManager::GetInstance().GetKeyToProcess();
+		if(eKeyToProcess != KeyboardManager::K_LAST)
 		{
-			case KeyboardManager::K_LEFT:
+			switch(eKeyToProcess)
+			{
+				case KeyboardManager::K_LEFT:
 				if(m_bMinEdit)
 				{
 					if(m_ucTempToSet > MIN_TEMP)
-						--m_ucTempToSet;
+					--m_ucTempToSet;
 				}
 				else if(m_bMaxEdit)
 				{
 					if(m_ucTempToSet > m_ucMinTemp + 1)
-						--m_ucTempToSet;
+					--m_ucTempToSet;
 				}
 				else if(m_eMode == TemperatureController::M_MANUAL)
 				{
 					m_bMinEdit = true;
 					m_ucTempToSet = m_ucMinTemp;
-					m_bBlink = true;					
+					m_bBlink = true;
 					m_ulLastBlink = Time::GetInstance().GetUS();
 				}
 				m_eState = S_REPAINT;
 				break;
 
-			case KeyboardManager::K_ESC:
+				case KeyboardManager::K_ESC:
 				if(m_bMinEdit)
 				{
 					m_bMinEdit = false;
@@ -79,11 +83,11 @@ void MainDisplay::Process()
 				}
 				break;
 
-			case KeyboardManager::K_OK:
+				case KeyboardManager::K_OK:
 				if(m_bMinEdit)
-				{					
+				{
 					m_eWriteState = WS_WRITE_MIN_REGISTER;
-					m_bMinEdit = false;					
+					m_bMinEdit = false;
 				}
 				else if(m_bMaxEdit)
 				{
@@ -92,21 +96,21 @@ void MainDisplay::Process()
 				}
 				else
 				{
-					//TODO enter menu
-					//m_eState = S_IN_MENU;
+					m_mainMenu.Show();
+					m_eState = S_SHOW_MENU;
 				}
 				break;
 
-			case KeyboardManager::K_RIGHT:
+				case KeyboardManager::K_RIGHT:
 				if(m_bMinEdit)
 				{
 					if(m_ucTempToSet < m_ucMaxTemp - 1)
-						++m_ucTempToSet;
+					++m_ucTempToSet;
 				}
 				else if(m_bMaxEdit)
 				{
 					if(m_ucTempToSet < MAX_TEMP)
-						++m_ucTempToSet;
+					++m_ucTempToSet;
 				}
 				else if(m_eMode == TemperatureController::M_MANUAL)
 				{
@@ -117,8 +121,9 @@ void MainDisplay::Process()
 				}
 				m_eState = S_REPAINT;
 				break;
-			default:
+				default:
 				break;
+			}
 		}
 	}
 
@@ -134,7 +139,7 @@ void MainDisplay::Process()
 			m_bHeating = TemperatureController::GetInstance().GetHeating();
 			m_eState = S_REPAINT_FIRST_LINE;
 			break;
-		case S_REPAINT_FIRST_LINE:		
+		case S_REPAINT_FIRST_LINE:	
 			if(DisplayLCD::GetInstance().GetAvailableTextLength() > 17)
 			{
 				m_actualDate.DateToString(m_lineBuf);
@@ -216,6 +221,16 @@ void MainDisplay::Process()
 				DisplayLCD::GetInstance().WriteText(m_lineBuf, SECOND_LINE_ADDRESS, 16);
 				
 				m_eState = S_IDLE;
+			}
+			break;
+		case S_SHOW_MENU:
+			if(!m_mainMenu.Finished())
+			{
+				m_mainMenu.Process();
+			}
+			else
+			{
+				m_eState = S_REPAINT;
 			}
 			break;
 		case S_IDLE:

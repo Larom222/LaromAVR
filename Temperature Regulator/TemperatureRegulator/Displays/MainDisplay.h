@@ -11,8 +11,7 @@
 
 #include "DisplayWindow.h"
 #include "../../../_Libraries/RTC_Manager/RTC_Manager.h"
-#include "../../../_Libraries/LCD_Display/LCD_Display.h"
-#include "../TemperatureController.h"
+#include "MainMenu.h"
 
 class MainDisplay
 {
@@ -22,6 +21,7 @@ class MainDisplay
 		S_REPAINT,
 		S_REPAINT_FIRST_LINE,
 		S_REPAINT_SECOND_LINE,
+		S_SHOW_MENU,
 	};
 	
 	enum E_WRITE_STATE
@@ -62,6 +62,8 @@ private:
 	E_STATE m_eState;
 	E_WRITE_STATE m_eWriteState;
 	char m_lineBuf[16];
+	
+	MainMenu m_mainMenu;
 };
 
 #endif //__MAINDISPLAY_H__

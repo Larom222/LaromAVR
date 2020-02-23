@@ -8,7 +8,7 @@
 #if defined(PROJ_LCD_DISPLAY_TEST) || defined(PROJ_EEPROM_TEST) || defined(PROJ_RTC_TEST) || defined(PROJ_ANALOG_TEST) || defined(PROJ_TEMPERATURE_REGULATOR)
 
 	#define F_CPU 8000000UL //8 MHz
-	#define WRITE_BUFFER_SIZE 64
+	#define WRITE_BUFFER_SIZE 72 //2 lines(2*32) + 2 commands(2*2)
 	
 	#define RS_PORT PORTD
 	#define RS_DDR DDRD

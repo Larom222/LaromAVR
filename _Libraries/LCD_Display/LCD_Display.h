@@ -52,6 +52,8 @@ public:
 	
 	bool WriteText(const char *_strText, unsigned char _ucPosition, unsigned char _ucTextLen);
 	
+	bool ClearDisplay();
+	
 protected:
 private:
 	DisplayLCD();

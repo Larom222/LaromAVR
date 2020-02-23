@@ -162,12 +162,12 @@ void TemperatureController::Process()
 	if(m_bHeating && m_usActualTemp / 100 >= m_ucMaxTemp)
 	{
 		m_bHeating = false;
-		//TODO disable relay
+		PORTB &= ~(1 << PB0); //PD1 set to 1 (enable relay)
 	}
 	else if(m_usActualTemp / 100 < m_ucMinTemp)
 	{
 		m_bHeating = true;
-		//TODO enable relay
+		PORTB |= (1 << PB0); //PD1 set to 1 (enable relay)
 	}
 }
 

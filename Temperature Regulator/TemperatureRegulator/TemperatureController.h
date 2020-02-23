@@ -75,6 +75,8 @@ public:
 	unsigned char GetMaxTemp() {return m_ucMaxTemp;}
 	unsigned short GetActualTemp() {return m_usActualTemp;}
 	bool GetHeating() {return m_bHeating;}
+	void RefreshMinMax() {m_eState = S_READ_MIN_TEMP;}
+	void RefreshDateTime() {m_eState = S_READ_DATE_TIME;}
 	
 	void Process();
 

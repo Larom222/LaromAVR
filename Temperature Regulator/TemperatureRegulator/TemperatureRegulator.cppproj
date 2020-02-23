@@ -215,16 +215,46 @@
     <Compile Include="Config.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Displays\DateTimeEditDisplay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\DateTimeEditDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\DayEditDisplay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\DayEditDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\DaySelectDisplay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\DaySelectDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Displays\DisplayWindow.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Displays\DisplayWindow.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Displays\HourEditDisplay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\HourEditDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Displays\MainDisplay.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Displays\MainDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\MainMenu.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Displays\MainMenu.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="KeyboardManager.cpp">

@@ -21,4 +21,7 @@
 
 #define BLINK_TIME 250000
 
+#define DEFAULT_MIN_TEMP 35
+#define DEFAULT_MAX_TEMP 40
+
 #endif //__CONFIG_H__

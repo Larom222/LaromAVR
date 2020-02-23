@@ -151,10 +151,10 @@ void DisplayLCD::ConfigLCD()
 	E_PORT &= ~(1 << E_PIN);
 	_delay_ms(1);
 	
-	D4_PORT &= ~(1 << D4_PIN);
-	D5_PORT |= (1 << D5_PIN);
-	D6_PORT |= (1 << D6_PIN);
-	D7_PORT |= (1 << D7_PIN);
+	D4_PORT &= ~(1 << D4_PIN); //cursor blinking
+	D5_PORT &= ~(1 << D5_PIN); //show cursor
+	D6_PORT |= (1 << D6_PIN);  //display on
+	D7_PORT |= (1 << D7_PIN);  //const 1
 	
 	E_PORT |= (1 << E_PIN);
 	_delay_ms(1);
@@ -305,38 +305,62 @@ void DisplayLCD::Process()
 			m_bWaitingForFunction = false;
 		}
 	}
-		
-	//write next buffer
-	if(m_bWriteBuffer[m_ucBufferStartPos][0])
-		RS_PORT |= (1 << RS_PIN);
-	else
-		RS_PORT &= ~(1 << RS_PIN);
-		
-	if(m_bWriteBuffer[m_ucBufferStartPos][1])
-		D7_PORT |= (1 << D7_PIN);
-	else
-		D7_PORT &= ~(1 << D7_PIN);
-		
-	if(m_bWriteBuffer[m_ucBufferStartPos][2])
-		D6_PORT |= (1 << D6_PIN);
-	else
-		D6_PORT &= ~(1 << D6_PIN);
-		
-	if(m_bWriteBuffer[m_ucBufferStartPos][3])
-		D5_PORT |= (1 << D5_PIN);
-	else
-		D5_PORT &= ~(1 << D5_PIN);
-		
-	if(m_bWriteBuffer[m_ucBufferStartPos][4])
-		D4_PORT |= (1 << D4_PIN);
-	else
-		D4_PORT &= ~(1 << D4_PIN);
 	
-	//start clock
-	E_PORT |= (1 << E_PIN);
-	m_bWaitingForClock = true;
-	IncreaseBufferStartPos(1);	
+	if(m_ucBufferStartPos != m_ucBufferEndPos)
+	{		
+		//write next buffer
+		if(m_bWriteBuffer[m_ucBufferStartPos][0])
+			RS_PORT |= (1 << RS_PIN);
+		else
+			RS_PORT &= ~(1 << RS_PIN);
+		
+		if(m_bWriteBuffer[m_ucBufferStartPos][1])
+			D7_PORT |= (1 << D7_PIN);
+		else
+			D7_PORT &= ~(1 << D7_PIN);
+		
+		if(m_bWriteBuffer[m_ucBufferStartPos][2])
+			D6_PORT |= (1 << D6_PIN);
+		else
+			D6_PORT &= ~(1 << D6_PIN);
+		
+		if(m_bWriteBuffer[m_ucBufferStartPos][3])
+			D5_PORT |= (1 << D5_PIN);
+		else
+			D5_PORT &= ~(1 << D5_PIN);
+		
+		if(m_bWriteBuffer[m_ucBufferStartPos][4])
+			D4_PORT |= (1 << D4_PIN);
+		else
+			D4_PORT &= ~(1 << D4_PIN);
+	
+		//start clock
+		E_PORT |= (1 << E_PIN);
+		m_bWaitingForClock = true;
+		IncreaseBufferStartPos(1);	
+	}
 }
+
+bool DisplayLCD::ClearDisplay()
+{
+	if(GetAvailableTextLength() < 34)
+		return false;
+	
+	MoveCursor(FIRST_LINE_ADDRESS);	
+	for(unsigned char i = 0; i < 16; i++)
+	{
+		PutChar(' ');
+	}
+	
+	MoveCursor(SECOND_LINE_ADDRESS);
+	for(unsigned char i = 0; i < 16; i++)
+	{
+		PutChar(' ');
+	}
+	
+	return true;
+}
+
 /*
 void DisplayLCD::Test()
 {

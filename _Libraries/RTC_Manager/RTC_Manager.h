@@ -13,6 +13,19 @@
 #include "../../_Libraries/TWI_Manager/TWI_Manager.h"
 #include "../../_Libraries/Time/Time.h"
 
+#define MIN_DAY 1
+#define MAX_DAY 31
+#define MIN_MONTH 1
+#define MAX_MONTH 12
+#define MIN_YEAR 0
+#define MAX_YEAR 99
+#define MIN_HOUR 0
+#define MAX_HOUR 23
+#define MIN_MINUTE 0
+#define MAX_MINUTE 59
+#define MIN_DAY_OF_WEEK 1
+#define MAX_DAY_OF_WEEK 7
+
 struct DateTime
 {
 	unsigned char m_year;
@@ -38,6 +51,7 @@ struct DateTime
 	void DateToString(char *_strBuf);
 	void TimeToString(char *_strBuf);
 	void DayOfWeekToString(char *_strBuf);
+	static void DayOfWeekToString(unsigned char _ucDayOfWeek, char *_strBuf);
 };
 
 class RTCManager
