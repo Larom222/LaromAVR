@@ -7,6 +7,7 @@
 
 
 #include "KeyboardManager.h"
+#include "../../_Libraries/Sound_Manager/SoundManager.h"
 #include "../../_Libraries/Time/Time.h"
 
 KeyboardManager::KeyboardManager()
@@ -99,5 +100,5 @@ void KeyboardManager::Process()
 
 void KeyboardManager::SendBeep()
 {
-	
+	SoundManager::GetInstance().Play();
 }

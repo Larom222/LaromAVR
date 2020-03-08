@@ -31,15 +31,15 @@
     <avrtool />
     <AsfFrameworkConfig>
       <framework-data xmlns="">
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <offline-documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.47.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.47.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -191,6 +191,18 @@
     <Compile Include="..\..\_Libraries\RTC_Manager\RTC_Manager.h">
       <SubType>compile</SubType>
       <Link>Lib\RTC_Manager.h</Link>
+    </Compile>
+    <Compile Include="..\..\_Libraries\Sound_Manager\SoundManager.cpp">
+      <SubType>compile</SubType>
+      <Link>Lib\SoundManager.cpp</Link>
+    </Compile>
+    <Compile Include="..\..\_Libraries\Sound_Manager\SoundManager.h">
+      <SubType>compile</SubType>
+      <Link>Lib\SoundManager.h</Link>
+    </Compile>
+    <Compile Include="..\..\_Libraries\Sound_Manager\SoundManager_pin_config.h">
+      <SubType>compile</SubType>
+      <Link>Lib\SoundManager_pin_config.h</Link>
     </Compile>
     <Compile Include="..\..\_Libraries\Time\Time.cpp">
       <SubType>compile</SubType>

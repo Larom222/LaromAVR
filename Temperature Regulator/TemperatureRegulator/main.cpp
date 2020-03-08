@@ -11,6 +11,7 @@
 #include "../../_Libraries/EEPROM_Manager/EEPROM_Manager.h"
 #include "../../_Libraries/RTC_Manager/RTC_Manager.h"
 #include "../../_Libraries/DebugTools/DebugTools.h"
+#include "../../_Libraries/Sound_Manager/SoundManager.h"
 #include "TemperatureController.h"
 #include "Thermistor.h"
 #include "Displays/MainDisplay.h"
@@ -26,6 +27,7 @@ int main(void)
 	EEPROMManager::GetInstance().Configure();
 	Thermistor::GetInstance().Configure();
 	KeyboardManager::GetInstance().Configure();
+	SoundManager::GetInstance().Configure();
 
 	MainDisplay mainDisplay;
 	
@@ -42,5 +44,6 @@ int main(void)
 		TemperatureController::GetInstance().Process();
 		mainDisplay.Process();
 		KeyboardManager::GetInstance().Process();
+		SoundManager::GetInstance().Process();
     }
 }

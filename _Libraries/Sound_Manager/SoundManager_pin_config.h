@@ -1,0 +1,11 @@
+
+#ifndef __SOUND_MANAGER_PIN_CONFIG_H__
+#define __SOUND_MANAGER_PIN_CONFIG_H__
+
+#if defined(PROJ_TEMPERATURE_REGULATOR)
+	#define SOUND_PORT PORTC
+	#define SOUND_DDR DDRC
+	#define SOUND_PIN 2
+#endif
+
+#endif //__SOUND_MANAGER_PIN_CONFIG_H__
