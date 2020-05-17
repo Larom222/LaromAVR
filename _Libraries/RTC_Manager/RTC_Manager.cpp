@@ -94,9 +94,9 @@ void RTCManager::Process()
 	switch(m_eState)
 	{
 		//send start sequence
-		case S_WRITE_START:
-			TWIManager::GetInstance().SendStart();
-			m_eState = S_WRITE_START_ACK;
+		case S_WRITE_START:		
+			if(TWIManager::GetInstance().SendStart())
+				m_eState = S_WRITE_START_ACK;
 			break;
 		
 		//wait for TWI
@@ -114,8 +114,8 @@ void RTCManager::Process()
 		
 		//send device address sequence
 		case S_WRITE_DEVICE_ADDRESS:
-			TWIManager::GetInstance().SendData(0xD0); //D0 for write, D1 for read
-			m_eState = S_WRITE_DEVICE_ADDRESS_ACK;
+			if(TWIManager::GetInstance().SendData(0xD0)) //D0 for write, D1 for read
+				m_eState = S_WRITE_DEVICE_ADDRESS_ACK;
 			break;
 			
 		case S_WRITE_DEVICE_ADDRESS_ACK:
@@ -132,8 +132,8 @@ void RTCManager::Process()
 		
 		//send memory address
 		case S_WRITE_ADDRESS:
-			TWIManager::GetInstance().SendData(0); //start from address 0 - seconds
-			m_eState = S_WRITE_ADDRESS_ACK;
+			if(TWIManager::GetInstance().SendData(0)) //start from address 0 - seconds
+				m_eState = S_WRITE_ADDRESS_ACK;
 			break;
 			
 		case S_WRITE_ADDRESS_ACK:
@@ -153,28 +153,35 @@ void RTCManager::Process()
 			switch(m_ucDataPart)
 			{
 				case 0:
-					TWIManager::GetInstance().SendData((m_dateTime.m_second % 10) | (m_dateTime.m_second / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_second % 10) | (m_dateTime.m_second / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 1:
-					TWIManager::GetInstance().SendData((m_dateTime.m_minute % 10) | (m_dateTime.m_minute / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_minute % 10) | (m_dateTime.m_minute / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 2:
-					TWIManager::GetInstance().SendData((m_dateTime.m_hour % 10) | (m_dateTime.m_hour / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_hour % 10) | (m_dateTime.m_hour / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 3:
-					TWIManager::GetInstance().SendData(m_dateTime.m_dayOfWeek);
+					if(TWIManager::GetInstance().SendData(m_dateTime.m_dayOfWeek))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 4:
-					TWIManager::GetInstance().SendData((m_dateTime.m_day % 10) | (m_dateTime.m_day / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_day % 10) | (m_dateTime.m_day / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 5:
-					TWIManager::GetInstance().SendData((m_dateTime.m_month % 10) | (m_dateTime.m_month / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_month % 10) | (m_dateTime.m_month / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 				case 6:
-					TWIManager::GetInstance().SendData((m_dateTime.m_year % 10) | (m_dateTime.m_year / 10 << 4));
+					if(TWIManager::GetInstance().SendData((m_dateTime.m_year % 10) | (m_dateTime.m_year / 10 << 4)))
+						m_eState = S_WRITE_DATA_ACK;
 				break;
 			}
-			m_eState = S_WRITE_DATA_ACK;
+			
 			break;
 			
 		case S_WRITE_DATA_ACK:
@@ -186,7 +193,7 @@ void RTCManager::Process()
 			{
 				if(m_ucDataPart >= 6)
 				{
-					m_eState = S_STOP;
+					m_eState = S_WRITE_STOP;
 				}
 				else
 				{
@@ -200,17 +207,27 @@ void RTCManager::Process()
 		}
 		
 		//send stop
+		case S_WRITE_STOP:		
+			if(TWIManager::GetInstance().SendStop())
+			{
+				m_eState = S_IDLE;
+				TWIManager::GetInstance().Unregister();				
+			}
+			break;
+		
+		//send stop
 		case S_STOP:
-			TWIManager::GetInstance().SendStop();
-			m_eState = S_IDLE;
-			TWIManager::GetInstance().Unregister();
+			if(TWIManager::GetInstance().SendStop())
+			{
+				m_eState = S_IDLE;
+				TWIManager::GetInstance().Unregister();
+			}
 			break;
 			
-			
 		//send start sequence
-		case S_READ_START:
-			TWIManager::GetInstance().SendStart();
-			m_eState = S_READ_START_ACK;
+		case S_READ_START:		
+			if(TWIManager::GetInstance().SendStart())
+				m_eState = S_READ_START_ACK;
 			break;
 			
 		//wait for TWI
@@ -227,27 +244,31 @@ void RTCManager::Process()
 		}
 		
 		//send device address sequence
-		case S_READ_DEVICE_ADDRESS:
-			TWIManager::GetInstance().SendData(0xD0); //D0 for write, D1 for read
-			m_eState = S_READ_DEVICE_ADDRESS_ACK;
+		case S_READ_DEVICE_ADDRESS:		
+			if(TWIManager::GetInstance().SendData(0xD0)) //D0 for write, D1 for read
+				m_eState = S_READ_DEVICE_ADDRESS_ACK;
 			break;
 			
 		case S_READ_DEVICE_ADDRESS_ACK:
 		{
 			unsigned char ucState = TWIManager::GetInstance().GetLastState();
 			if(ucState == 0) //TWI busy
+			{				
 				break;
+			}
 			else if(ucState == 0x18)
 				m_eState = S_READ_ADDRESS;
 			else
+			{
 				m_eState = S_IDLE;
+			}
 			break;
 		}
 		
 		//send memory address
-		case S_READ_ADDRESS:
-			TWIManager::GetInstance().SendData(0);
-			m_eState = S_READ_ADDRESS_ACK;
+		case S_READ_ADDRESS:		
+			if(TWIManager::GetInstance().SendData(0))
+				m_eState = S_READ_ADDRESS_ACK;
 			break;
 		
 		case S_READ_ADDRESS_ACK:
@@ -264,8 +285,8 @@ void RTCManager::Process()
 		
 		//repeat start sequence
 		case S_READ_START_2:
-			TWIManager::GetInstance().SendStart();
-			m_eState = S_READ_START_2_ACK;
+			if(TWIManager::GetInstance().SendStart())
+				m_eState = S_READ_START_2_ACK;
 			break;
 			
 		//wait for TWI
@@ -283,8 +304,8 @@ void RTCManager::Process()
 		
 		//send slave address, read bit = 1; MR mode!
 		case S_READ_ADDRESS_2:
-			TWIManager::GetInstance().SendData(0xD1); //D0 for write, D1 for read
-			m_eState = S_READ_ADDRESS_2_ACK;
+			if(TWIManager::GetInstance().SendData(0xD1)) //D0 for write, D1 for read
+				m_eState = S_READ_ADDRESS_2_ACK;
 			break;
 		
 		case S_READ_ADDRESS_2_ACK:
@@ -302,10 +323,15 @@ void RTCManager::Process()
 		//send read command
 		case S_READ_DATA:
 			if(m_ucDataPart < 6)
-				TWIManager::GetInstance().SendData(0, true);
+			{
+				if(TWIManager::GetInstance().SendData(0, true))
+					m_eState = S_READ_DATA_ACK;
+			}
 			else
-				TWIManager::GetInstance().SendData(0, false);
-			m_eState = S_READ_DATA_ACK;
+			{
+				if(TWIManager::GetInstance().SendData(0, false))
+					m_eState = S_READ_DATA_ACK;
+			}
 			break;
 		
 		case S_READ_DATA_ACK:

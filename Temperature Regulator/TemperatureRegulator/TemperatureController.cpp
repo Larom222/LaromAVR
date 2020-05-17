@@ -8,6 +8,7 @@
 
 #include "TemperatureController.h"
 #include "Thermistor.h"
+#include "../../_Libraries/DebugTools/DebugTools.h"
 
 // default constructor
 TemperatureController::TemperatureController()
@@ -60,7 +61,7 @@ void TemperatureController::Process()
 				if(RTCManager::GetInstance().ReadDateTime())
 					m_eState = S_READ_DATE_TIME_RES;
 				else
-					EEPROMManager::GetInstance().Unregister();
+					RTCManager::GetInstance().Unregister();
 			}			
 			break;
 		case S_READ_DATE_TIME_RES:
@@ -170,7 +171,7 @@ void TemperatureController::Process()
 	if(m_bHeating && m_usActualTemp / 100 >= m_ucMaxTemp)
 	{
 		m_bHeating = false;
-		PORTB &= ~(1 << PB0); //PD1 set to 1 (enable relay)
+		PORTB &= ~(1 << PB0); //PD1 set to 0 (disable relay)
 	}
 	else if(m_usActualTemp / 100 < m_ucMinTemp)
 	{

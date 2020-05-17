@@ -125,11 +125,6 @@ void EEPROMManager::Process()
 				m_eState = S_WRITE_PAGE_NO;
 			else 
 			{
-				if(!DebugTools::GetInstance().m_bError)
-				{
-					DebugTools::GetInstance().m_bError = true;
-					DebugTools::GetInstance().m_iDebugCounter = 100 + ucState;
-				}
 				m_eState = S_IDLE;
 			}
 			break;
@@ -150,11 +145,6 @@ void EEPROMManager::Process()
 				m_eState = S_WRITE_ADDRESS;
 			else
 			{
-				if(!DebugTools::GetInstance().m_bError)
-				{
-					DebugTools::GetInstance().m_bError = true;
-					DebugTools::GetInstance().m_iDebugCounter = 200 + ucState;					
-				}
 				m_eState = S_IDLE;
 			}
 			break;
@@ -177,11 +167,6 @@ void EEPROMManager::Process()
 				m_eState = S_WRITE_DATA;
 			else
 			{
-				if(!DebugTools::GetInstance().m_bError)
-				{
-					DebugTools::GetInstance().m_bError = true;
-					DebugTools::GetInstance().m_iDebugCounter = 300 + ucState;
-				}
 				m_eState = S_IDLE;
 			}
 			break;
@@ -204,11 +189,6 @@ void EEPROMManager::Process()
 				m_eState = S_STOP;
 			else
 			{
-				if(!DebugTools::GetInstance().m_bError)
-				{
-					DebugTools::GetInstance().m_bError = true;
-					DebugTools::GetInstance().m_iDebugCounter = 400 + ucState;
-				}
 				m_eState = S_IDLE;				
 			}
 			break;
@@ -224,7 +204,7 @@ void EEPROMManager::Process()
 			}			
 			break;
 			
-			
+						
 		//send start sequence
 		case S_READ_START:
 			if(TWIManager::GetInstance().SendStart())

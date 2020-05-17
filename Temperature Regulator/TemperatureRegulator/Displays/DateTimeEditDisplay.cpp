@@ -10,6 +10,7 @@
 #include "../../../_Libraries/LCD_Display/LCD_Display.h"
 #include "../TemperatureController.h"
 #include "../KeyboardManager.h"
+#include "../../../_Libraries/DebugTools/DebugTools.h"
 
 // default constructor
 DateTimeEditDisplay::DateTimeEditDisplay()

@@ -83,6 +83,7 @@ class RTCManager
 		S_READ_DATA_ACK,
 		
 		S_STOP,
+		S_WRITE_STOP,
 	};
 //variables
 public:

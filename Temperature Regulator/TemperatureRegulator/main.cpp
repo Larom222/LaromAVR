@@ -45,5 +45,11 @@ int main(void)
 		mainDisplay.Process();
 		KeyboardManager::GetInstance().Process();
 		SoundManager::GetInstance().Process();
+		
+		/*if(DebugTools::GetInstance().m_bProcessing)
+		{
+			SoundManager::GetInstance().Play();
+			//DebugTools::GetInstance().m_bError = false;	
+		}*/
     }
 }
